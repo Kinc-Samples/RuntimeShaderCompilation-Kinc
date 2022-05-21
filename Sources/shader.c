@@ -43,10 +43,11 @@ static void load_shader(const char *filename, kinc_g4_shader_t *shader, kinc_g4_
 	kinc_file_reader_t file;
 	kinc_file_reader_open(&file, filename, KINC_FILE_TYPE_ASSET);
 	size_t data_size = kinc_file_reader_size(&file);
-	uint8_t *data = allocate(data_size);
+	uint8_t *data = allocate(data_size + 1);
 	kinc_file_reader_read(&file, data, data_size);
 	kinc_file_reader_close(&file);
-	kinc_g4_shader_init(shader, data, data_size, shader_type);
+	data[data_size] = 0;
+	kinc_g4_shader_init_from_source(shader, data, shader_type);
 }
 
 int kickstart(int argc, char **argv) {
@@ -56,8 +57,8 @@ int kickstart(int argc, char **argv) {
 	heap = (uint8_t *)malloc(HEAP_SIZE);
 	assert(heap != NULL);
 
-	load_shader("shader.vert", &vertex_shader, KINC_G4_SHADER_TYPE_VERTEX);
-	load_shader("shader.frag", &fragment_shader, KINC_G4_SHADER_TYPE_FRAGMENT);
+	load_shader("shader.vert.glsl", &vertex_shader, KINC_G4_SHADER_TYPE_VERTEX);
+	load_shader("shader.frag.glsl", &fragment_shader, KINC_G4_SHADER_TYPE_FRAGMENT);
 
 	kinc_g4_vertex_structure_t structure;
 	kinc_g4_vertex_structure_init(&structure);

@@ -5,7 +5,6 @@ await project.addProject('Kinc');
 await project.addProject('krafix');
 
 project.addFile('Sources/**');
-project.addFile('Shaders/**');
 project.setDebugDir('Deployment');
 
 project.flatten();
