@@ -4,6 +4,7 @@
 #include <kinc/graphics4/shader.h>
 #include <kinc/graphics4/vertexbuffer.h>
 #include <kinc/io/filereader.h>
+#include <kinc/log.h>
 #include <kinc/system.h>
 
 #include <assert.h>
@@ -47,7 +48,11 @@ static void load_shader(const char *filename, kinc_g4_shader_t *shader, kinc_g4_
 	kinc_file_reader_read(&file, data, data_size);
 	kinc_file_reader_close(&file);
 	data[data_size] = 0;
-	kinc_g4_shader_init_from_source(shader, data, shader_type);
+	int errors = kinc_g4_shader_init_from_source(shader, data, shader_type);
+	if (errors > 0) {
+		kinc_log(KINC_LOG_LEVEL_ERROR, "Shader-compilation failed.");
+		exit(1);
+	}
 }
 
 int kickstart(int argc, char **argv) {
